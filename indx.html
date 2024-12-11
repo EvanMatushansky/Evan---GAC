@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Average Calculator</title>
+    <style>
+        /* General Body Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container Styles */
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header Styles */
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        /* Label Styles */
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        /* Input Field Styles */
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* Button Styles */
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        /* Hover Effects */
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Result Section */
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Grade Average Calculator</h1>
+        <div id="input-fields">
+            <label for="grade1">Grade 1:</label>
+            <input type="number" id="grade1" placeholder="Enter grade" />
+            <label for="weight1">Weight 1:</label>
+            <input type="number" id="weight1" placeholder="Enter weight" />
+            
+            <label for="grade2">Grade 2:</label>
+            <input type="number" id="grade2" placeholder="Enter grade" />
+            <label for="weight2">Weight 2:</label>
+            <input type="number" id="weight2" placeholder="Enter weight" />
+
+            <!-- Button to add more grade/weight pairs -->
+            <button onclick="addFields()">Add More Grades</button>
+            
+            <button onclick="calculateAverage()">Calculate Average</button>
+            <button onclick="resetFields()">Reset</button>
+        </div>
+        
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        // Function to calculate the average based on input grades and weights
+        function calculateAverage() {
+            let totalWeight = 0;
+            let weightedSum = 0;
+
+            // Loop through the fields dynamically to calculate weighted sum and total weight
+            const grades = document.querySelectorAll('input[id^="grade"]');
+            const weights = document.querySelectorAll('input[id^="weight"]');
+
+            for (let i = 0; i < grades.length; i++) {
+                const grade = parseFloat(grades[i].value);
+                const weight = parseFloat(weights[i].value);
+
+                // Check if inputs are valid
+                if (isNaN(grade) || isNaN(weight) || grade < 0 || weight <= 0) {
+                    alert("Please enter valid numbers for all grades and weights.");
+                    return;
+                }
+
+                weightedSum += grade * weight;
+                totalWeight += weight;
+            }
+
+            // Edge case: If total weight is zero
+            if (totalWeight === 0) {
+                alert("Total weight cannot be zero.");
+                return;
+            }
+
+            // Calculate weighted average
+            const weightedAverage = weightedSum / totalWeight;
+
+            // Display the result
+            document.getElementById("result").innerHTML = `Your weighted average is: ${weightedAverage.toFixed(2)}`;
+        }
+
+        // Function to add more grade and weight input fields
+        function addFields() {
+            const inputFields = document.getElementById('input-fields');
+
+            const gradeCount = inputFields.getElementsByTagName('input').length / 2; // Each grade has a pair (grade, weight)
+            const newGradeNumber = gradeCount + 1;
+
+            // Create new input fields for grade and weight
+            const newGradeInput = document.createElement('input');
+            newGradeInput.type = 'number';
+            newGradeInput.id = 'grade' + newGradeNumber;
+            newGradeInput.placeholder = 'Enter grade ' + newGradeNumber;
+
+            const newWeightInput = document.createElement('input');
+            newWeightInput.type = 'number';
+            newWeightInput.id = 'weight' + newGradeNumber;
+            newWeightInput.placeholder = 'Enter weight ' + newGradeNumber;
+
+            // Append the new fields to the input container
+            inputFields.appendChild(document.createElement('br'));
+            inputFields.appendChild(newGradeInput);
+            inputFields.appendChild(newWeightInput);
+        }
+
+        // Function to reset all input fields
+        function resetFields() {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => input.value = '');
+            document.getElementById('result').innerHTML = '';
+        }
+    </script>
+</body>
+</html>
